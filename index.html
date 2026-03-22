@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PULSE — Community Poll</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink:    #0d0d0d;
+    --paper:  #f5f0e8;
+    --cream:  #ede8de;
+    --accent: #e63329;
+    --gold:   #c9a84c;
+    --muted:  #7a7060;
+    --card:   #ffffff;
+    --radius: 4px;
+    --shadow: 0 2px 24px rgba(0,0,0,0.10);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(0,0,0,0.04) 39px, rgba(0,0,0,0.04) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0,0,0,0.02) 39px, rgba(0,0,0,0.02) 40px);
+    min-height: 100vh;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0 60px;
+  }
+
+  /* ── Header ── */
+  header {
+    width: 100%;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid var(--accent);
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: var(--paper);
+    line-height: 1;
+  }
+
+  .logo span { color: var(--accent); }
+
+  .issue-tag {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  /* ── Main container ── */
+  main {
+    width: 100%;
+    max-width: 560px;
+    padding: 0 16px;
+    margin-top: 32px;
+  }
+
+  /* ── Section label ── */
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+
+  /* ── Hero question ── */
+  .hero-question {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 8vw, 52px);
+    line-height: 1.0;
+    letter-spacing: 1px;
+    color: var(--ink);
+    margin-bottom: 28px;
+    position: relative;
+  }
+
+  .hero-question::before {
+    content: '"';
+    font-size: 120px;
+    color: var(--cream);
+    position: absolute;
+    top: -20px;
+    left: -10px;
+    line-height: 1;
+    z-index: -1;
+    font-family: Georgia, serif;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--card);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+  }
+
+  /* ── Name input ── */
+  .field-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .name-input {
+    width: 100%;
+    padding: 14px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    background: var(--paper);
+    border: 2px solid transparent;
+    border-bottom-color: var(--ink);
+    border-radius: 0;
+    outline: none;
+    color: var(--ink);
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+
+  .name-input:focus {
+    border-bottom-color: var(--accent);
+    background: #fff;
+  }
+
+  .name-input::placeholder { color: #bbb; }
+
+  /* ── Options ── */
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option-label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    border: 2px solid var(--cream);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option-label::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.18s;
+  }
+
+  .option-label:hover {
+    border-color: var(--ink);
+    transform: translateX(3px);
+  }
+
+  input[type="radio"] { display: none; }
+
+  input[type="radio"]:checked + .option-label {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+    transform: translateX(6px);
+  }
+
+  .option-key {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    line-height: 1;
+    color: var(--accent);
+    min-width: 22px;
+    position: relative;
+    z-index: 1;
+    transition: color 0.18s;
+  }
+
+  input[type="radio"]:checked + .option-label .option-key {
+    color: var(--gold);
+  }
+
+  .option-text {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.3;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Submit ── */
+  .submit-btn {
+    width: 100%;
+    padding: 18px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 4px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    margin-top: 8px;
+  }
+
+  .submit-btn:hover { background: #c42820; }
+  .submit-btn:active { transform: scale(0.98); }
+  .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+  /* ── Error ── */
+  .error-msg {
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 8px;
+    min-height: 18px;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── Thank you screen ── */
+  #thank-you {
+    display: none;
+    text-align: center;
+    padding: 48px 24px;
+    animation: fadeSlide 0.5s ease forwards;
+  }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .ty-badge {
+    width: 72px;
+    height: 72px;
+    background: var(--ink);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+  }
+
+  .ty-badge svg { width: 36px; height: 36px; }
+
+  .ty-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 3px;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .ty-sub {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 300px;
+    margin: 0 auto 28px;
+  }
+
+  .ty-choice {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: var(--radius);
+    letter-spacing: 0.5px;
+    margin-bottom: 24px;
+  }
+
+  .results-link {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--cream);
+    transition: color 0.2s;
+  }
+  .results-link:hover { color: var(--accent); }
+
+  /* ── Footer ── */
+  footer {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── Loading skeleton ── */
+  .skeleton {
+    background: linear-gradient(90deg, var(--cream) 25%, var(--paper) 50%, var(--cream) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 3px;
+    height: 20px;
+    margin-bottom: 10px;
+  }
+  @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">PUL<span>S</span>E</div>
+  <div class="issue-tag">Community Vote · 2025</div>
+</header>
+
+<main>
+
+  <!-- ── Poll form ── -->
+  <div id="poll-view">
+    <p class="section-label" style="margin-top:0">This Week's Question</p>
+    <h1 class="hero-question" id="question-text">
+      <div class="skeleton" style="height:44px;width:95%"></div>
+      <div class="skeleton" style="height:44px;width:80%"></div>
+    </h1>
+
+    <div class="card">
+      <label class="field-label" for="voter-name">Your Name</label>
+      <input
+        id="voter-name"
+        class="name-input"
+        type="text"
+        placeholder="e.g. Alex Johnson"
+        maxlength="60"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="card">
+      <p class="section-label">Cast Your Vote</p>
+      <div class="options-grid" id="options-container">
+        <div class="skeleton" style="height:56px"></div>
+        <div class="skeleton" style="height:56px"></div>
+        <div class="skeleton" style="height:56px"></div>
+        <div class="skeleton" style="height:56px"></div>
+      </div>
+    </div>
+
+    <div class="error-msg" id="error-msg"></div>
+    <button class="submit-btn" id="submit-btn" disabled>SUBMIT VOTE</button>
+  </div>
+
+  <!-- ── Thank you ── -->
+  <div id="thank-you">
+    <div class="ty-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#f5f0e8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+    <div class="ty-headline">Thank You!</div>
+    <p class="ty-sub">Your voice has been recorded. Results are tallied in real time.</p>
+    <div class="ty-choice" id="ty-choice-label"></div><br/>
+    <a class="results-link" href="/results">View live results →</a>
+  </div>
+
+  <footer>PULSE · Powered by Node.js &amp; Express</footer>
+
+</main>
+
+<script>
+  const API = ''; // Empty = same origin. Change to 'http://localhost:3000' if needed.
+
+  let pollData = null;
+
+  // ── Load poll ──────────────────────────────────────────────────────────────
+  async function loadPoll() {
+    try {
+      const res = await fetch(`${API}/api/poll`);
+      pollData = await res.json();
+      renderPoll(pollData);
+    } catch (e) {
+      document.getElementById('question-text').textContent = 'Could not load poll. Is the server running?';
+    }
+  }
+
+  function renderPoll({ question, options }) {
+    document.getElementById('question-text').textContent = question;
+
+    const grid = document.getElementById('options-container');
+    grid.innerHTML = '';
+
+    options.forEach(opt => {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = `
+        <input type="radio" name="choice" id="opt-${opt.id}" value="${opt.id}"/>
+        <label class="option-label" for="opt-${opt.id}">
+          <span class="option-key">${opt.id.toUpperCase()}</span>
+          <span class="option-text">${opt.label}</span>
+        </label>`;
+      grid.appendChild(wrapper);
+    });
+
+    // Enable submit when both name + choice present
+    document.querySelectorAll('input[name="choice"]').forEach(r => {
+      r.addEventListener('change', validateForm);
+    });
+    document.getElementById('voter-name').addEventListener('input', validateForm);
+    document.getElementById('submit-btn').disabled = false;
+    document.getElementById('submit-btn').addEventListener('click', submitVote);
+  }
+
+  function validateForm() {
+    const name   = document.getElementById('voter-name').value.trim();
+    const choice = document.querySelector('input[name="choice"]:checked');
+    const btn    = document.getElementById('submit-btn');
+    btn.disabled = !(name.length > 0 && choice);
+  }
+
+  // ── Submit ─────────────────────────────────────────────────────────────────
+  async function submitVote() {
+    clearError();
+    const name   = document.getElementById('voter-name').value.trim();
+    const choice = document.querySelector('input[name="choice"]:checked')?.value;
+
+    if (!name) return showError('Please enter your name.');
+    if (!choice) return showError('Please select an option.');
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'SUBMITTING…';
+
+    try {
+      const res = await fetch(`${API}/api/vote`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, choice })
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        showError(data.error || 'Something went wrong.');
+        btn.disabled = false;
+        btn.textContent = 'SUBMIT VOTE';
+        return;
+      }
+
+      // Show thank-you
+      const label = pollData.options.find(o => o.id === choice)?.label || choice;
+      document.getElementById('ty-choice-label').textContent = `✓ ${label}`;
+      document.getElementById('poll-view').style.display = 'none';
+      document.getElementById('thank-you').style.display = 'block';
+
+    } catch (e) {
+      showError('Network error. Please try again.');
+      btn.disabled = false;
+      btn.textContent = 'SUBMIT VOTE';
+    }
+  }
+
+  function showError(msg) {
+    document.getElementById('error-msg').textContent = msg;
+  }
+  function clearError() {
+    document.getElementById('error-msg').textContent = '';
+  }
+
+  loadPoll();
+</script>
+</body>
+</html>
